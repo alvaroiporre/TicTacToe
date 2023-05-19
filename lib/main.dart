@@ -21,10 +21,12 @@ class TicTacToeScreen extends StatefulWidget {
 }
 
 class _TicTacToeScreenState extends State<TicTacToeScreen> {
-  List<List<String>> _board = List<List<String>>.generate(3, (_) => List<String>.filled(3, ''));
+  List<List<String>> _board =
+      List<List<String>>.generate(3, (_) => List<String>.filled(3, ''));
   bool _player1Turn = true;
   String _currentPlayer = 'X';
   bool _gameEnded = false;
+  bool _tie = false;
 
   @override
   void initState() {
@@ -37,6 +39,7 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
     _player1Turn = true;
     _currentPlayer = 'X';
     _gameEnded = false;
+    _tie = false;
   }
 
   void _makeMove(int row, int col) {
@@ -81,7 +84,8 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
     }
 
 // Check for a tie
-    if (!_board.any((row) => row.contains(''))) {
+    if (!_board.any((row) => row.contains('')) && !_gameEnded) {
+      _tie = true;
       _gameEnded = true;
     }
 
@@ -92,8 +96,11 @@ class _TicTacToeScreenState extends State<TicTacToeScreen> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Game Over'),
-            content: Text(
-                _currentPlayer == 'X' ? 'Player 1 Wins!' : 'Player 2 Wins!'),
+            content: Text(_tie
+                ? "There is a TIE"
+                : (_currentPlayer == 'X'
+                    ? 'Player O Wins!'
+                    : 'Player X Wins!')),
             actions: [
               TextButton(
                 child: Text('New Game'),
